@@ -25,7 +25,26 @@ thiserror = "1.0"
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 hyper = {version = "0.14", default-features = false, features = ["client", "http1", "http2"]}
 
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+js-sys = {version = "0.3", default-features = false}
+wasm-bindgen = {version = "0.2", default-features = false, features = ["std"]}
+wasm-bindgen-futures = {version = "0.4", default-features = false}
+
+[target.'cfg(target_arch = "wasm32")'.dependencies.web-sys]
+version = "0.3"
+default-features = false
+features = [
+  'Request',
+  'RequestInit',
+  'RequestMode',
+  'Response',
+  'Window',
+]
+
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 hyper = {version = "0.14", default-features = false, features = ["client", "http1", "http2", "tcp"]}
 tokio = {version = "1.0", default-features = false, features = ["macros", "rt-multi-thread"]}
 warp = {version = "0.3", default-features = false}
+
+[target.'cfg(target_arch = "wasm32")'.dev-dependencies]
+wasm-bindgen-test = "0.3"

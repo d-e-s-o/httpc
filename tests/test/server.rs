@@ -1,15 +1,23 @@
 // Copyright (C) 2021 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
-use warp::path;
-use warp::serve;
-use warp::Filter as _;
-
-use tokio::runtime::Builder;
-
+#[cfg(not(target_arch = "wasm32"))]
 fn main() {
+  use http::StatusCode;
+
+  use warp::any;
+  use warp::cors;
+  use warp::path;
+  use warp::reply::reply;
+  use warp::reply::with_status;
+  use warp::serve;
+  use warp::Filter as _;
+
+  use tokio::runtime::Builder;
+
   let get = path("get").map(|| "GET success");
-  let routes = get;
+  let reject = any().map(|| with_status(reply(), StatusCode::NOT_FOUND));
+  let routes = get.or(reject).with(cors().allow_any_origin());
 
   let rt = Builder::new_multi_thread().enable_io().build().unwrap();
   rt.block_on(async move {
@@ -18,3 +26,8 @@ fn main() {
     serve.await
   })
 }
+
+// Clever wasm-bindgen-test tries to compile this example when it
+// shouldn't and bails out if there is no main function. So stub it out.
+#[cfg(target_arch = "wasm32")]
+fn main() {}

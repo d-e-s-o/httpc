@@ -5,6 +5,7 @@ mod test;
 
 use bytes::Bytes;
 
+use http::header::CONTENT_TYPE;
 use http::Request;
 use http::StatusCode;
 use http::Uri;
@@ -50,6 +51,27 @@ async fn get_binary() {
     response.body(),
     &Bytes::from_static(b"\x00\x01\x02\x03\x04\x05")
   );
+}
+
+/// Check that a request header is handled properly.
+#[test]
+async fn get_with_request_header() {
+  let uri = Uri::builder()
+    .scheme("http")
+    .authority(server())
+    .path_and_query("/get-with-request-header")
+    .build()
+    .unwrap();
+
+  let request = Request::builder()
+    .uri(uri)
+    .header(CONTENT_TYPE, "text/plain")
+    .body(())
+    .unwrap();
+  let client = Client::new();
+  let response = client.request(request).await.unwrap();
+  assert_eq!(response.status(), StatusCode::OK);
+  assert_eq!(response.body(), &Bytes::from_static(b"text/plain"));
 }
 
 /// Check that a NOT_FOUND error is propagated up properly.

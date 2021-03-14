@@ -15,6 +15,7 @@ use wasm_bindgen::JsCast as _;
 use wasm_bindgen_futures::JsFuture;
 
 use web_sys::window;
+use web_sys::Headers;
 use web_sys::Request as WebRequest;
 use web_sys::RequestInit;
 use web_sys::RequestMode;
@@ -27,11 +28,21 @@ use crate::Error;
 /// Convert an `http::Request` into one as used by the Fetch API.
 fn into_web_request(request: Request<()>) -> Result<WebRequest, Error> {
   let (parts, ()) = request.into_parts();
+  let headers = Headers::new().map_err(|err| Error::web("failed to create Headers object", err))?;
+  let headers =
+    parts
+      .headers
+      .iter()
+      .try_fold::<_, _, Result<_, Error>>(headers, |headers, (k, v)| {
+        let _ = headers.append(k.as_str(), v.to_str()?);
+        Ok(headers)
+      })?;
   let uri = parts.uri;
 
   let mut opts = RequestInit::new();
   opts.mode(RequestMode::Cors);
   opts.method(parts.method.as_str());
+  opts.headers(&headers);
 
   let request = WebRequest::new_with_str_and_init(&uri.to_string(), &opts).map_err(|err| {
     Error::web(

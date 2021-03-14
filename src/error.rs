@@ -14,6 +14,12 @@ pub enum Error {
     #[source]
     http::Error,
   ),
+  #[error("encountered request header with opaque bytes")]
+  HttpHeader(
+    #[from]
+    #[source]
+    http::header::ToStrError,
+  ),
   /// An error as used by the hyper crate.
   #[cfg(not(target_arch = "wasm32"))]
   #[error("the hyper crate reported an error")]

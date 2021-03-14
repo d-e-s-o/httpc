@@ -5,11 +5,13 @@
 fn main() {
   use bytes::Bytes;
 
+  use http::header::CONTENT_TYPE;
   use http::Response;
   use http::StatusCode;
 
   use warp::any;
   use warp::cors;
+  use warp::header;
   use warp::path;
   use warp::reply::reply;
   use warp::reply::with_status;
@@ -25,9 +27,13 @@ fn main() {
       .body(Bytes::from_static(b"\x00\x01\x02\x03\x04\x05"))
       .unwrap()
   });
+  let get_with_request_header = path("get-with-request-header")
+    .and(header(CONTENT_TYPE.as_str()))
+    .map(|content: String| content);
   let reject = any().map(|| with_status(reply(), StatusCode::NOT_FOUND));
   let routes = get
     .or(get_binary)
+    .or(get_with_request_header)
     .or(reject)
     .with(cors().allow_any_origin());
 

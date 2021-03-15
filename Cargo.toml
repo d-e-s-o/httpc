@@ -1,0 +1,31 @@
+[package]
+name = "httpc"
+version = "0.0.0"
+authors = ["Daniel Mueller <deso@posteo.net>"]
+edition = "2018"
+license = "Apache-2.0 OR MIT"
+homepage = "https://github.com/d-e-s-o/httpc"
+description = """
+An HTTP client working both natively and in WASM environments.
+"""
+
+# Not an actual example. Used for testing. Needs to be an example
+# because it needs access to dev-dependencies, which [[bin]] does not
+# provide. [[test]] in turn contains the test harness which prints
+# unrelated stuff and is unwanted for that reason.
+[[example]]
+name = "test-server"
+path = "tests/test/server.rs"
+
+[dependencies]
+bytes = "1.0"
+http = "0.2"
+thiserror = "1.0"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+hyper = {version = "0.14", default-features = false, features = ["client", "http1", "http2"]}
+
+[target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
+hyper = {version = "0.14", default-features = false, features = ["client", "http1", "http2", "tcp"]}
+tokio = {version = "1.0", default-features = false, features = ["macros", "rt-multi-thread"]}
+warp = {version = "0.3", default-features = false}

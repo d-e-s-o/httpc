@@ -3,6 +3,9 @@
 
 #[cfg(not(target_arch = "wasm32"))]
 fn main() {
+  use bytes::Bytes;
+
+  use http::Response;
   use http::StatusCode;
 
   use warp::any;
@@ -16,8 +19,17 @@ fn main() {
   use tokio::runtime::Builder;
 
   let get = path("get").map(|| "GET success");
+  let get_binary = path("get-binary").map(|| {
+    Response::builder()
+      .status(StatusCode::OK)
+      .body(Bytes::from_static(b"\x00\x01\x02\x03\x04\x05"))
+      .unwrap()
+  });
   let reject = any().map(|| with_status(reply(), StatusCode::NOT_FOUND));
-  let routes = get.or(reject).with(cors().allow_any_origin());
+  let routes = get
+    .or(get_binary)
+    .or(reject)
+    .with(cors().allow_any_origin());
 
   let rt = Builder::new_multi_thread().enable_io().build().unwrap();
   rt.block_on(async move {

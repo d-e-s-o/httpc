@@ -3,6 +3,8 @@
 
 mod test;
 
+use bytes::Bytes;
+
 use http::Request;
 use http::StatusCode;
 use http::Uri;
@@ -28,6 +30,26 @@ async fn get_ok() {
   let response = client.request(request).await.unwrap();
   assert_eq!(response.status(), StatusCode::OK);
   assert_eq!(response.body(), "GET success");
+}
+
+/// Check that we can properly handle binary data in a response.
+#[test]
+async fn get_binary() {
+  let uri = Uri::builder()
+    .scheme("http")
+    .authority(server())
+    .path_and_query("/get-binary")
+    .build()
+    .unwrap();
+
+  let request = Request::get(uri).body(()).unwrap();
+  let client = Client::new();
+  let response = client.request(request).await.unwrap();
+  assert_eq!(response.status(), StatusCode::OK);
+  assert_eq!(
+    response.body(),
+    &Bytes::from_static(b"\x00\x01\x02\x03\x04\x05")
+  );
 }
 
 /// Check that a NOT_FOUND error is propagated up properly.

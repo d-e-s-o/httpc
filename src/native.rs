@@ -26,10 +26,14 @@ impl Client {
   }
 
   /// Issue a request and retrieve a response.
-  // TODO: Need to support bodies other than `()`.
-  pub async fn request(&self, request: Request<()>) -> Result<Response<Bytes>, Error> {
-    let (parts, ()) = request.into_parts();
-    let request = Request::from_parts(parts, Body::default());
+  pub async fn request(&self, request: Request<Option<String>>) -> Result<Response<Bytes>, Error> {
+    let (parts, body) = request.into_parts();
+    let body = if let Some(body) = body {
+      Body::from(body)
+    } else {
+      Body::empty()
+    };
+    let request = Request::from_parts(parts, body);
 
     let response = HyperClient::request(&self.0, request).await?;
     let (parts, body) = response.into_parts();

@@ -12,6 +12,7 @@ use js_sys::ArrayBuffer;
 use js_sys::DataView;
 
 use wasm_bindgen::JsCast as _;
+use wasm_bindgen::JsValue;
 use wasm_bindgen_futures::JsFuture;
 
 use web_sys::window;
@@ -26,8 +27,8 @@ use crate::Error;
 
 
 /// Convert an `http::Request` into one as used by the Fetch API.
-fn into_web_request(request: Request<()>) -> Result<WebRequest, Error> {
-  let (parts, ()) = request.into_parts();
+fn into_web_request(request: Request<Option<String>>) -> Result<WebRequest, Error> {
+  let (parts, body) = request.into_parts();
   let headers = Headers::new().map_err(|err| Error::web("failed to create Headers object", err))?;
   let headers =
     parts
@@ -37,12 +38,21 @@ fn into_web_request(request: Request<()>) -> Result<WebRequest, Error> {
         let _ = headers.append(k.as_str(), v.to_str()?);
         Ok(headers)
       })?;
+
+  let value;
+  let body = if let Some(body) = body {
+    value = JsValue::from_str(&body);
+    Some(&value)
+  } else {
+    None
+  };
   let uri = parts.uri;
 
   let mut opts = RequestInit::new();
   opts.mode(RequestMode::Cors);
   opts.method(parts.method.as_str());
   opts.headers(&headers);
+  opts.body(body);
 
   let request = WebRequest::new_with_str_and_init(&uri.to_string(), &opts).map_err(|err| {
     Error::web(
@@ -99,8 +109,7 @@ impl Client {
   }
 
   /// Issue a request and retrieve a response.
-  // TODO: Need to support bodies other than `()`.
-  pub async fn request(&self, request: Request<()>) -> Result<Response<Bytes>, Error> {
+  pub async fn request(&self, request: Request<Option<String>>) -> Result<Response<Bytes>, Error> {
     let request = into_web_request(request)?;
     let response = JsFuture::from(self.0.fetch_with_request(&request))
       .await

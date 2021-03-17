@@ -10,9 +10,11 @@ fn main() {
   use http::StatusCode;
 
   use warp::any;
+  use warp::body::bytes;
   use warp::cors;
   use warp::header;
   use warp::path;
+  use warp::post;
   use warp::reply::reply;
   use warp::reply::with_status;
   use warp::serve;
@@ -30,10 +32,17 @@ fn main() {
   let get_with_request_header = path("get-with-request-header")
     .and(header(CONTENT_TYPE.as_str()))
     .map(|content: String| content);
+  let post = post().and(path("post")).and(bytes()).map(|body| {
+    Response::builder()
+      .status(StatusCode::OK)
+      .body(body)
+      .unwrap()
+  });
   let reject = any().map(|| with_status(reply(), StatusCode::NOT_FOUND));
   let routes = get
     .or(get_binary)
     .or(get_with_request_header)
+    .or(post)
     .or(reject)
     .with(cors().allow_any_origin());
 

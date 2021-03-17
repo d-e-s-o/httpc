@@ -6,6 +6,7 @@ mod test;
 use bytes::Bytes;
 
 use http::header::CONTENT_TYPE;
+use http::Method;
 use http::Request;
 use http::StatusCode;
 use http::Uri;
@@ -26,7 +27,7 @@ async fn get_ok() {
     .build()
     .unwrap();
 
-  let request = Request::get(uri).body(()).unwrap();
+  let request = Request::get(uri).body(None).unwrap();
   let client = Client::new();
   let response = client.request(request).await.unwrap();
   assert_eq!(response.status(), StatusCode::OK);
@@ -43,7 +44,7 @@ async fn get_binary() {
     .build()
     .unwrap();
 
-  let request = Request::get(uri).body(()).unwrap();
+  let request = Request::get(uri).body(None).unwrap();
   let client = Client::new();
   let response = client.request(request).await.unwrap();
   assert_eq!(response.status(), StatusCode::OK);
@@ -66,7 +67,7 @@ async fn get_with_request_header() {
   let request = Request::builder()
     .uri(uri)
     .header(CONTENT_TYPE, "text/plain")
-    .body(())
+    .body(None)
     .unwrap();
   let client = Client::new();
   let response = client.request(request).await.unwrap();
@@ -84,8 +85,29 @@ async fn get_not_found() {
     .build()
     .unwrap();
 
-  let request = Request::get(uri).body(()).unwrap();
+  let request = Request::get(uri).body(None).unwrap();
   let client = Client::new();
   let response = client.request(request).await.unwrap();
   assert_eq!(response.status(), StatusCode::NOT_FOUND);
+}
+
+/// Check that we can make a HTTP POST request with a proper body.
+#[test]
+async fn post_with_body() {
+  let uri = Uri::builder()
+    .scheme("http")
+    .authority(server())
+    .path_and_query("/post")
+    .build()
+    .unwrap();
+
+  let request = Request::builder()
+    .method(Method::POST)
+    .uri(uri)
+    .body(Some("!^*&@42!%*^".into()))
+    .unwrap();
+  let client = Client::new();
+  let response = client.request(request).await.unwrap();
+  assert_eq!(response.status(), StatusCode::OK);
+  assert_eq!(response.body(), &Bytes::from_static(b"!^*&@42!%*^"));
 }

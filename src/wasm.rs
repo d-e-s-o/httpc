@@ -121,3 +121,17 @@ impl Client {
     into_http_response(response).await
   }
 }
+
+impl From<Window> for Client {
+  /// Create a `Client` from a `Window`.
+  fn from(window: Window) -> Self {
+    Self(window)
+  }
+}
+
+impl Into<Window> for Client {
+  /// Extract the `Window` from a `Client`.
+  fn into(self) -> Window {
+    self.0
+  }
+}

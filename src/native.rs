@@ -41,3 +41,17 @@ impl Client {
     Ok(Response::from_parts(parts, bytes))
   }
 }
+
+impl From<HyperClient<HttpConnector, Body>> for Client {
+  /// Create a `Client` from a `hyper::Client`.
+  fn from(client: HyperClient<HttpConnector, Body>) -> Self {
+    Self(client)
+  }
+}
+
+impl Into<HyperClient<HttpConnector, Body>> for Client {
+  /// Extract the `hyper::Client` from a `Client`.
+  fn into(self) -> HyperClient<HttpConnector, Body> {
+    self.0
+  }
+}

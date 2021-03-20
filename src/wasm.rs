@@ -122,6 +122,12 @@ impl Client {
   }
 }
 
+impl Default for Client {
+  fn default() -> Self {
+    Self::new()
+  }
+}
+
 impl From<Window> for Client {
   /// Create a `Client` from a `Window`.
   fn from(window: Window) -> Self {

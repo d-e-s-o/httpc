@@ -42,6 +42,12 @@ impl Client {
   }
 }
 
+impl Default for Client {
+  fn default() -> Self {
+    Self::new()
+  }
+}
+
 impl From<HyperClient<HttpConnector, Body>> for Client {
   /// Create a `Client` from a `hyper::Client`.
   fn from(client: HyperClient<HttpConnector, Body>) -> Self {

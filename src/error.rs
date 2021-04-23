@@ -89,6 +89,7 @@ mod tests {
 
   /// Ensure that our `Error` type implements `Send` and `Sync`.
   #[test]
+  #[allow(clippy::unnecessary_operation)]
   fn ensure_error_trait_impls() {
     fn err() -> Error {
       unimplemented!()

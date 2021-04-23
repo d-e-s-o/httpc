@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 #[cfg(not(target_arch = "wasm32"))]
+#[allow(clippy::borrow_interior_mutable_const)]
 fn main() {
   use bytes::Bytes;
 

@@ -1,5 +1,7 @@
+[![pipeline](https://gitlab.com/d-e-s-o/httpc/badges/master/pipeline.svg)](https://gitlab.com/d-e-s-o/httpc/commits/master)
 [![crates.io](https://img.shields.io/crates/v/httpc.svg)](https://crates.io/crates/httpc)
 [![Docs](https://docs.rs/httpc/badge.svg)](https://docs.rs/httpc)
+[![rustc](https://img.shields.io/badge/rustc-1.46+-blue.svg)](https://blog.rust-lang.org/2020/08/27/Rust-1.46.0.html)
 
 httpc
 =====

@@ -8,10 +8,34 @@ use http::Response;
 
 use hyper::body::to_bytes;
 use hyper::body::Body;
+use hyper::client::connect::Connect;
 use hyper::client::connect::HttpConnector;
 use hyper::Client as HyperClient;
 
 use crate::Error;
+
+
+/// Issue a request and retrieve a response.
+async fn request<C>(
+  client: &HyperClient<C>,
+  request: Request<Option<String>>,
+) -> Result<Response<Bytes>, Error>
+where
+  C: Connect + Clone + Send + Sync + 'static,
+{
+  let (parts, body) = request.into_parts();
+  let body = if let Some(body) = body {
+    Body::from(body)
+  } else {
+    Body::empty()
+  };
+  let request = Request::from_parts(parts, body);
+
+  let response = HyperClient::request(client, request).await?;
+  let (parts, body) = response.into_parts();
+  let bytes = to_bytes(body).await?;
+  Ok(Response::from_parts(parts, bytes))
+}
 
 
 /// An HTTP client for native usage.
@@ -27,18 +51,7 @@ impl Client {
 
   /// Issue a request and retrieve a response.
   pub async fn request(&self, request: Request<Option<String>>) -> Result<Response<Bytes>, Error> {
-    let (parts, body) = request.into_parts();
-    let body = if let Some(body) = body {
-      Body::from(body)
-    } else {
-      Body::empty()
-    };
-    let request = Request::from_parts(parts, body);
-
-    let response = HyperClient::request(&self.0, request).await?;
-    let (parts, body) = response.into_parts();
-    let bytes = to_bytes(body).await?;
-    Ok(Response::from_parts(parts, bytes))
+    self::request(&self.0, request).await
   }
 }
 

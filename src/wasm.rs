@@ -96,6 +96,21 @@ async fn into_http_response(response: WebResponse) -> Result<Response<Bytes>, Er
   Ok(response)
 }
 
+async fn request(
+  client: &Window,
+  request: Request<Option<String>>,
+) -> Result<Response<Bytes>, Error> {
+  let request = into_web_request(request)?;
+  let response = JsFuture::from(client.fetch_with_request(&request))
+    .await
+    .map_err(|err| Error::web("failed to issue GET request", err))?;
+  let response = response
+    .dyn_into::<WebResponse>()
+    .map_err(|err| Error::web("future did not resolve into a web-sys Response", err))?;
+
+  into_http_response(response).await
+}
+
 
 /// An HTTP client for usage in WASM environments.
 #[derive(Debug)]
@@ -110,15 +125,7 @@ impl Client {
 
   /// Issue a request and retrieve a response.
   pub async fn request(&self, request: Request<Option<String>>) -> Result<Response<Bytes>, Error> {
-    let request = into_web_request(request)?;
-    let response = JsFuture::from(self.0.fetch_with_request(&request))
-      .await
-      .map_err(|err| Error::web("failed to issue GET request", err))?;
-    let response = response
-      .dyn_into::<WebResponse>()
-      .map_err(|err| Error::web("future did not resolve into a web-sys Response", err))?;
-
-    into_http_response(response).await
+    self::request(&self.0, request).await
   }
 }
 

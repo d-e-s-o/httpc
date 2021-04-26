@@ -7,6 +7,7 @@ httpc
 =====
 
 - [Documentation][docs-rs]
+- [Changelog](CHANGELOG.md)
 
 **httpc** is a Rust library crate providing an HTTP client that works
 both natively as well as in a bare bones WASM environment as used in

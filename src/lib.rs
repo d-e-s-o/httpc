@@ -2,12 +2,14 @@
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 mod error;
+mod issue;
 #[cfg(not(target_arch = "wasm32"))]
 mod native;
 #[cfg(target_arch = "wasm32")]
 mod wasm;
 
 pub use error::Error;
+pub use issue::Issue;
 #[cfg(not(target_arch = "wasm32"))]
 pub use native::Client;
 #[cfg(target_arch = "wasm32")]

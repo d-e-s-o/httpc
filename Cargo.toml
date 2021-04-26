@@ -21,6 +21,7 @@ name = "test-server"
 path = "tests/test/server.rs"
 
 [dependencies]
+async-trait = "0.1.50"
 bytes = "1.0"
 http = "0.2"
 thiserror = "1.0"

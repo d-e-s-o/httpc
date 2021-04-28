@@ -15,6 +15,18 @@ use wasm_bindgen_test::wasm_bindgen_test_configure;
 wasm_bindgen_test_configure!(run_in_browser);
 
 
+/// Create a `hyper` client.
+#[cfg(not(target_arch = "wasm32"))]
+pub fn client() -> hyper::Client<hyper::client::connect::HttpConnector, hyper::body::Body> {
+  hyper::Client::new()
+}
+
+/// Create a WASM client.
+#[cfg(target_arch = "wasm32")]
+pub fn client() -> web_sys::Window {
+  web_sys::window().expect("no window found; not running inside a browser?")
+}
+
 /// Retrieve the address of the HTTP server to use for testing.
 pub fn server() -> &'static str {
   option_env!("HTTPC_TEST_SERVER").expect("HTTPC_TEST_SERVER environment variable not found")

@@ -11,8 +11,9 @@ use http::Request;
 use http::StatusCode;
 use http::Uri;
 
-use httpc::Client;
+use httpc::Issue as _;
 
+use test::client;
 use test::server;
 use test::test;
 
@@ -28,8 +29,8 @@ async fn get_ok() {
     .unwrap();
 
   let request = Request::get(uri).body(None).unwrap();
-  let client = Client::new();
-  let response = client.request(request).await.unwrap();
+  let client = client();
+  let response = client.issue(request).await.unwrap();
   assert_eq!(response.status(), StatusCode::OK);
   assert_eq!(response.body(), "GET success");
 }
@@ -45,8 +46,8 @@ async fn get_binary() {
     .unwrap();
 
   let request = Request::get(uri).body(None).unwrap();
-  let client = Client::new();
-  let response = client.request(request).await.unwrap();
+  let client = client();
+  let response = client.issue(request).await.unwrap();
   assert_eq!(response.status(), StatusCode::OK);
   assert_eq!(
     response.body(),
@@ -69,8 +70,8 @@ async fn get_with_request_header() {
     .header(CONTENT_TYPE, "text/plain")
     .body(None)
     .unwrap();
-  let client = Client::new();
-  let response = client.request(request).await.unwrap();
+  let client = client();
+  let response = client.issue(request).await.unwrap();
   assert_eq!(response.status(), StatusCode::OK);
   assert_eq!(response.body(), &Bytes::from_static(b"text/plain"));
 }
@@ -86,8 +87,8 @@ async fn get_not_found() {
     .unwrap();
 
   let request = Request::get(uri).body(None).unwrap();
-  let client = Client::new();
-  let response = client.request(request).await.unwrap();
+  let client = client();
+  let response = client.issue(request).await.unwrap();
   assert_eq!(response.status(), StatusCode::NOT_FOUND);
 }
 
@@ -106,8 +107,8 @@ async fn post_with_body() {
     .uri(uri)
     .body(Some("!^*&@42!%*^".into()))
     .unwrap();
-  let client = Client::new();
-  let response = client.request(request).await.unwrap();
+  let client = client();
+  let response = client.issue(request).await.unwrap();
   assert_eq!(response.status(), StatusCode::OK);
   assert_eq!(response.body(), &Bytes::from_static(b"!^*&@42!%*^"));
 }

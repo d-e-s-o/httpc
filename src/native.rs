@@ -1,6 +1,8 @@
 // Copyright (C) 2021 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
+use async_trait::async_trait;
+
 use bytes::Bytes;
 
 use http::Request;
@@ -13,6 +15,7 @@ use hyper::client::connect::HttpConnector;
 use hyper::Client as HyperClient;
 
 use crate::Error;
+use crate::Issue;
 
 
 /// Issue a request and retrieve a response.
@@ -72,5 +75,15 @@ impl Into<HyperClient<HttpConnector, Body>> for Client {
   /// Extract the `hyper::Client` from a `Client`.
   fn into(self) -> HyperClient<HttpConnector, Body> {
     self.0
+  }
+}
+
+#[async_trait(?Send)]
+impl<C> Issue for HyperClient<C>
+where
+  C: Connect + Clone + Send + Sync + 'static,
+{
+  async fn issue(&self, request: Request<Option<String>>) -> Result<Response<Bytes>, Error> {
+    self::request(&self, request).await
   }
 }

@@ -1,6 +1,8 @@
 // Copyright (C) 2021 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
+use async_trait::async_trait;
+
 use bytes::Bytes;
 
 use http::response::Builder;
@@ -24,6 +26,7 @@ use web_sys::Response as WebResponse;
 use web_sys::Window;
 
 use crate::Error;
+use crate::Issue;
 
 
 /// Convert an `http::Request` into one as used by the Fetch API.
@@ -146,5 +149,12 @@ impl Into<Window> for Client {
   /// Extract the `Window` from a `Client`.
   fn into(self) -> Window {
     self.0
+  }
+}
+
+#[async_trait(?Send)]
+impl Issue for Window {
+  async fn issue(&self, request: Request<Option<String>>) -> Result<Response<Bytes>, Error> {
+    self::request(&self, request).await
   }
 }

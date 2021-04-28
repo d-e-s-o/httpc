@@ -117,6 +117,7 @@ async fn request(
 
 /// An HTTP client for usage in WASM environments.
 #[derive(Debug)]
+#[deprecated(note = "use Issue trait instead")]
 pub struct Client(Window);
 
 impl Client {

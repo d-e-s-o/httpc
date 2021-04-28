@@ -44,6 +44,7 @@ where
 /// An HTTP client for native usage.
 // TODO: We should support other connectors to enable HTTPS usage.
 #[derive(Debug)]
+#[deprecated(note = "use Issue trait instead")]
 pub struct Client(HyperClient<HttpConnector, Body>);
 
 impl Client {

@@ -48,4 +48,6 @@ lint:clippy:
     - build:cargo
   script:
   - rustup component add clippy
-  - cargo clippy --all-targets --all-features -- -D warnings
+  # TODO: Once we removed deprecated features we should remove the -A
+  #       part.
+  - cargo clippy --all-targets --all-features -- -A deprecated -D warnings

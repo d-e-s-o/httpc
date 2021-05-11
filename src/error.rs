@@ -42,7 +42,7 @@ pub enum Error {
     context: String,
     /// The originally reported `JsValue` in some textual form.
     // We do not keep the `JsValue` around because they are a pain to
-    // work with (just extracting something useful) and they case
+    // work with (just extracting something useful) and they cause
     // everything they touch to be not `Send`.
     #[source]
     source: WebError,

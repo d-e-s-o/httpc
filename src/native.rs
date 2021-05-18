@@ -79,12 +79,39 @@ impl Into<HyperClient<HttpConnector, Body>> for Client {
   }
 }
 
-#[async_trait(?Send)]
+#[async_trait]
 impl<C> Issue for HyperClient<C>
 where
   C: Connect + Clone + Send + Sync + 'static,
 {
   async fn issue(&self, request: Request<Option<String>>) -> Result<Response<Bytes>, Error> {
     self::request(&self, request).await
+  }
+}
+
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  use std::future::Future;
+
+
+  /// Ensure that futures as returned by `Client::issue` are `Send`.
+  #[test]
+  fn issue_future_is_send() {
+    fn test<T>(_unused: T)
+    where
+      T: Future + Send,
+    {
+    }
+
+    // We just care about the code type checking.
+    if false {
+      let client = Client::new();
+      let request = Request::new(None);
+      let future = client.0.issue(request);
+      test(future);
+    }
   }
 }

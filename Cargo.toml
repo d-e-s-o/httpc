@@ -9,9 +9,6 @@ description = """
 An HTTP client working both natively and in WASM environments.
 """
 
-[badges]
-gitlab = { repository = "d-e-s-o/httpc", branch = "master" }
-
 # Not an actual example. Used for testing. Needs to be an example
 # because it needs access to dev-dependencies, which [[bin]] does not
 # provide. [[test]] in turn contains the test harness which prints

@@ -50,4 +50,4 @@ lint:clippy:
   - rustup component add clippy
   # TODO: Once we removed deprecated features we should remove the -A
   #       part.
-  - cargo clippy --all-targets --all-features -- -A deprecated -D warnings
+  - cargo clippy --all-targets --all-features -- -A unknown_lints -A deprecated -D warnings

@@ -19,10 +19,10 @@ build:cargo:
   script:
   - rustup target add wasm32-unknown-unknown
   - rustc --version && cargo --version
-  - cargo build --lib --tests --verbose
-  - cargo build --lib --tests --verbose --release
-  - cargo build --lib --tests --verbose --target=wasm32-unknown-unknown
-  - cargo build --lib --tests --verbose --release --target=wasm32-unknown-unknown
+  - cargo build --lib --tests
+  - cargo build --lib --tests --release
+  - cargo build --lib --tests --target=wasm32-unknown-unknown
+  - cargo build --lib --tests --release --target=wasm32-unknown-unknown
 
 test:cargo:
   stage: test

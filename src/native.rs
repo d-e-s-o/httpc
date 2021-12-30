@@ -72,10 +72,10 @@ impl From<HyperClient<HttpConnector, Body>> for Client {
   }
 }
 
-impl Into<HyperClient<HttpConnector, Body>> for Client {
+impl From<Client> for HyperClient<HttpConnector, Body> {
   /// Extract the `hyper::Client` from a `Client`.
-  fn into(self) -> HyperClient<HttpConnector, Body> {
-    self.0
+  fn from(client: Client) -> HyperClient<HttpConnector, Body> {
+    client.0
   }
 }
 
@@ -85,7 +85,7 @@ where
   C: Connect + Clone + Send + Sync + 'static,
 {
   async fn issue(&self, request: Request<Option<String>>) -> Result<Response<Bytes>, Error> {
-    self::request(&self, request).await
+    self::request(self, request).await
   }
 }
 

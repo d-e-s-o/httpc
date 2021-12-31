@@ -1,3 +1,8 @@
+Unreleased
+----------
+- Pinned `wasm-bindgen` dependency to `0.2.74`
+
+
 0.1.1
 -----
 - Introduced `Issue` trait for issuing requests

@@ -28,7 +28,7 @@ hyper = {version = "0.14", default-features = false, features = ["client", "http
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 js-sys = {version = "0.3", default-features = false}
-wasm-bindgen = {version = "0.2", default-features = false, features = ["std"]}
+wasm-bindgen = {version = "=0.2.74", default-features = false, features = ["std"]}
 wasm-bindgen-futures = {version = "0.4", default-features = false}
 
 [target.'cfg(target_arch = "wasm32")'.dependencies.web-sys]

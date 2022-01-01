@@ -1,4 +1,4 @@
-# Copyright (C) 2021 Daniel Mueller <deso@posteo.net>
+# Copyright (C) 2021-2022 Daniel Mueller <deso@posteo.net>
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 TMPDIR := $(patsubst %/,%,$(if $(TMPDIR),$(TMPDIR),/tmp))
@@ -18,6 +18,7 @@ test-native:
 # Run the test suite, using the locally installed
 # wasm-bindgen-test-runner if available (or assuming a system-installed
 # one if not).
+# Note that in order to debug issues, you can run with NO_HEADLESS=1.
 .PHONY: test-wasm
 test-wasm:
 	@PATH="$(WASMDIR)/bin:$(PATH)" bash test-target.sh --target=wasm32-unknown-unknown

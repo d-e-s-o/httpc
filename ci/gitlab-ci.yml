@@ -95,7 +95,7 @@ build-test-debug-wasm:cargo:
     # Node.js is the default test backend and we don't change it for the
     # unit tests. All other tests run in a headless browser, we use
     # Firefox.
-  - apt-get install --assume-yes nodejs firefox-geckodriver
+  - apt-get install --no-upgrade --assume-yes nodejs firefox-geckodriver
   - make test-runner
   - make test-wasm
 

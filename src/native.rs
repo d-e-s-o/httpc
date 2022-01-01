@@ -1,4 +1,4 @@
-// Copyright (C) 2021 Daniel Mueller <deso@posteo.net>
+// Copyright (C) 2021-2022 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 use async_trait::async_trait;
@@ -13,6 +13,7 @@ use hyper::body::Body;
 use hyper::client::connect::Connect;
 use hyper::client::connect::HttpConnector;
 use hyper::Client as HyperClient;
+use hyper_tls::HttpsConnector;
 
 use crate::Error;
 use crate::Issue;
@@ -42,15 +43,16 @@ where
 
 
 /// An HTTP client for native usage.
-// TODO: We should support other connectors to enable HTTPS usage.
 #[derive(Debug)]
 #[deprecated(note = "use Issue trait instead")]
-pub struct Client(HyperClient<HttpConnector, Body>);
+pub struct Client(HyperClient<HttpsConnector<HttpConnector>, Body>);
 
 impl Client {
   /// Create a new "native" HTTP client.
   pub fn new() -> Self {
-    Self(HyperClient::new())
+    let https = HttpsConnector::new();
+    let client = HyperClient::builder().build(https);
+    Self(client)
   }
 
   /// Issue a request and retrieve a response.
@@ -65,16 +67,16 @@ impl Default for Client {
   }
 }
 
-impl From<HyperClient<HttpConnector, Body>> for Client {
+impl From<HyperClient<HttpsConnector<HttpConnector>, Body>> for Client {
   /// Create a `Client` from a `hyper::Client`.
-  fn from(client: HyperClient<HttpConnector, Body>) -> Self {
+  fn from(client: HyperClient<HttpsConnector<HttpConnector>, Body>) -> Self {
     Self(client)
   }
 }
 
-impl From<Client> for HyperClient<HttpConnector, Body> {
+impl From<Client> for HyperClient<HttpsConnector<HttpConnector>, Body> {
   /// Extract the `hyper::Client` from a `Client`.
-  fn from(client: Client) -> HyperClient<HttpConnector, Body> {
+  fn from(client: Client) -> Self {
     client.0
   }
 }

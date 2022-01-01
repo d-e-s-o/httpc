@@ -1,4 +1,4 @@
-// Copyright (C) 2021 Daniel Mueller <deso@posteo.net>
+// Copyright (C) 2021-2022 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 mod test;
@@ -111,4 +111,14 @@ async fn post_with_body() {
   let response = client.issue(request).await.unwrap();
   assert_eq!(response.status(), StatusCode::OK);
   assert_eq!(response.body(), &Bytes::from_static(b"!^*&@42!%*^"));
+}
+
+/// Check that we can make a live request to a site using HTTPS.
+#[test]
+async fn live_get_with_tls() {
+  let uri = Uri::from_static("https://whatwg.org/");
+  let request = Request::get(uri).header("Origin", "*").body(None).unwrap();
+  let client = client();
+  let response = client.issue(request).await.unwrap();
+  assert_eq!(response.status(), StatusCode::OK);
 }

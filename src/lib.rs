@@ -1,8 +1,10 @@
-// Copyright (C) 2021 Daniel Mueller <deso@posteo.net>
+// Copyright (C) 2021-2022 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 #[cfg(not(target_arch = "wasm32"))]
 pub use hyper;
+#[cfg(not(target_arch = "wasm32"))]
+pub use hyper_tls;
 #[cfg(target_arch = "wasm32")]
 pub use web_sys;
 

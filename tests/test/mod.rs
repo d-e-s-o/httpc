@@ -1,4 +1,4 @@
-// Copyright (C) 2021 Daniel Mueller <deso@posteo.net>
+// Copyright (C) 2021-2022 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -17,8 +17,12 @@ wasm_bindgen_test_configure!(run_in_browser);
 
 /// Create a `hyper` client.
 #[cfg(not(target_arch = "wasm32"))]
-pub fn client() -> hyper::Client<hyper::client::connect::HttpConnector, hyper::body::Body> {
-  hyper::Client::new()
+pub fn client() -> hyper::Client<
+  hyper_tls::HttpsConnector<hyper::client::connect::HttpConnector>,
+  hyper::body::Body,
+> {
+  let https = hyper_tls::HttpsConnector::new();
+  hyper::Client::builder().build(https)
 }
 
 /// Create a WASM client.

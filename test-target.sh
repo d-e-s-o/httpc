@@ -12,7 +12,6 @@ exec 3< <(cargo run --example test-server --quiet -- --nocapture)
 # serve on, and store it in HTTPC_TEST_SERVER.
 read -r HTTPC_TEST_SERVER <&3;
 # Now run the actual test suite.
-HTTPC_TEST_SERVER="${HTTPC_TEST_SERVER}" cargo test
-HTTPC_TEST_SERVER="${HTTPC_TEST_SERVER}" cargo test --target=wasm32-unknown-unknown
+HTTPC_TEST_SERVER="${HTTPC_TEST_SERVER}" cargo test "${@}"
 
 kill $!

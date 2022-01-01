@@ -7,12 +7,19 @@ WASMTAR := $(WASMDIR)/wasm-bindgen.tar.gz
 VERSION := $(WASMDIR)/version
 
 
+.PHONY: test
+test: test-native test-wasm
+
+.PHONY: test-native
+test-native:
+	@bash test-target.sh
+
 # Run the test suite, using the locally installed
 # wasm-bindgen-test-runner if available (or assuming a system-installed
 # one if not).
-.PHONY: test
-test:
-	@PATH="$(WASMDIR)/bin:$(PATH)" bash test.sh
+.PHONY: test-wasm
+test-wasm:
+	@PATH="$(WASMDIR)/bin:$(PATH)" bash test-target.sh --target=wasm32-unknown-unknown
 
 
 # Ensure that a suitable wasm-bindgen-test-runner binary is available

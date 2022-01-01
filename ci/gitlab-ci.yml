@@ -79,6 +79,11 @@ build-test-debug-wasm:cargo:
     policy: pull
   - <<: *target-debug-wasm-cache
   script:
+    # wasm-bindgen does not seem to be handling RUSTFLAGS properly,
+    # causing spurious rebuilds due to cargo complaining that the
+    # variable has changed. To work around that problem, just unset it
+    # here. Sigh.
+  - unset RUSTFLAGS
   - rustup target add wasm32-unknown-unknown
   - rustc --version && cargo --version
   - cargo build --lib --tests --target=wasm32-unknown-unknown
@@ -108,6 +113,7 @@ build-release-wasm:cargo:
   - <<: *crates-io-cache
   - <<: *target-release-wasm-cache
   script:
+  - unset RUSTFLAGS
   - rustup target add wasm32-unknown-unknown
   - rustc --version && cargo --version
   - cargo build --lib --tests --release --target=wasm32-unknown-unknown

@@ -5,6 +5,7 @@ TMPDIR := $(patsubst %/,%,$(if $(TMPDIR),$(TMPDIR),/tmp))
 WASMDIR := $(TMPDIR)/wasm-bindgen-test-runner
 WASMTAR := $(WASMDIR)/wasm-bindgen.tar.gz
 VERSION := $(WASMDIR)/version
+TEST_RUNNER := $(WASMDIR)/bin/wasm-bindgen-test-runner
 
 
 .PHONY: test
@@ -25,8 +26,10 @@ test-wasm:
 # Ensure that a suitable wasm-bindgen-test-runner binary is available
 # in the temporary directory.
 .PHONY: test-runner
-test-runner: CLIDIR := $(WASMDIR)/wasm-bindgen-$$(cat $(VERSION))/crates/cli/
-test-runner: $(WASMTAR)
+test-runner: $(TEST_RUNNER)
+
+$(TEST_RUNNER): CLIDIR := $(WASMDIR)/wasm-bindgen-$$(cat $(VERSION))/crates/cli/
+$(TEST_RUNNER): $(WASMTAR)
 	tar --directory $(WASMDIR) --extract --gzip --file $<
 	cargo install --quiet --path $(CLIDIR) --root $(WASMDIR) --bin=wasm-bindgen-test-runner
 

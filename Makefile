@@ -32,7 +32,7 @@ test-runner: $(TEST_RUNNER)
 $(TEST_RUNNER): CLIDIR := $(WASMDIR)/wasm-bindgen-$$(cat $(VERSION))/crates/cli/
 $(TEST_RUNNER): $(WASMTAR)
 	tar --directory $(WASMDIR) --extract --gzip --file $<
-	cargo install --quiet --path $(CLIDIR) --root $(WASMDIR) --bin=wasm-bindgen-test-runner
+	cargo install --quiet --force --path $(CLIDIR) --root $(WASMDIR) --bin=wasm-bindgen-test-runner
 
 
 # Ensure that we have a tar archive containing the source code of the

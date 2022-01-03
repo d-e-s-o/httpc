@@ -1,7 +1,7 @@
 Unreleased
 ----------
 - Added TLS support to native client
-- Bumped minimum supported Rust version to `1.51`
+- Bumped minimum supported Rust version to `1.54`
 - Pinned `wasm-bindgen` dependency to `0.2.74`
 
 

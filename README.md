@@ -1,7 +1,6 @@
-[![pipeline](https://gitlab.com/d-e-s-o/httpc/badges/master/pipeline.svg)](https://gitlab.com/d-e-s-o/httpc/commits/master)
+[![pipeline](https://github.com/d-e-s-o/httpc/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/d-e-s-o/httpc/actions/workflows/test.yml)
 [![crates.io](https://img.shields.io/crates/v/httpc.svg)](https://crates.io/crates/httpc)
 [![Docs](https://docs.rs/httpc/badge.svg)](https://docs.rs/httpc)
-[![rustc](https://img.shields.io/badge/rustc-1.54+-blue.svg)](https://blog.rust-lang.org/2021/07/29/Rust-1.54.0.html)
 
 httpc
 =====

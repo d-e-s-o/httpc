@@ -1,4 +1,4 @@
-// Copyright (C) 2021-2022 Daniel Mueller <deso@posteo.net>
+// Copyright (C) 2021-2025 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -32,6 +32,7 @@ pub fn client() -> web_sys::Window {
 }
 
 /// Retrieve the address of the HTTP server to use for testing.
+#[allow(clippy::option_env_unwrap)]
 pub fn server() -> &'static str {
   option_env!("HTTPC_TEST_SERVER").expect("HTTPC_TEST_SERVER environment variable not found")
 }

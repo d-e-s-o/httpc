@@ -1,0 +1,64 @@
+name: Test
+
+on:
+  pull_request:
+  push:
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+  # Build with only line information enabled to decrease compilation
+  # time and binary artifact sizes in CI, while still providing relevant
+  # data in backtraces. This option is assumed to only have marginal
+  # effects on the generated code, likely only in terms of section
+  # arrangement. See
+  # https://doc.rust-lang.org/rustc/codegen-options/index.html#debuginfo
+  RUSTFLAGS: '-C debuginfo=line-tables-only'
+
+jobs:
+  test-native:
+    name: Test native
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Test
+        run: |
+          cargo build --lib --tests
+          make test-native
+  test-wasm:
+    name: Test WASM
+    runs-on: ubuntu-latest
+    env:
+      # wasm-bindgen does not seem to be handling RUSTFLAGS properly,
+      # causing spurious rebuilds due to cargo complaining that the
+      # variable has changed. To work around that problem, just unset it
+      # here. Sigh.
+      RUSTFLAGS: ''
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          target: wasm32-unknown-unknown
+      - run: |
+          sudo apt-get update
+          # Node.js is the default test backend and we don't change it for the
+          # unit tests. All other tests run in a headless browser, we use
+          # Firefox.
+          sudo apt-get install --no-upgrade --assume-yes nodejs firefox
+      - name: Test
+        run: |
+          cargo build --lib --tests --target=wasm32-unknown-unknown
+          make test-runner
+          make test-wasm
+  clippy:
+    name: Lint with clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+        # TODO: Once we removed deprecated features we should remove the -A
+        #       part.
+      - run: cargo clippy --no-deps --all-targets --workspace -- -A unknown_lints -A deprecated -D warnings

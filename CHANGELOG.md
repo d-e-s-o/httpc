@@ -1,3 +1,8 @@
+Unreleased
+----------
+- Switched to using GitHub Actions as CI provider
+
+
 0.1.2
 -----
 - Added TLS support to native client

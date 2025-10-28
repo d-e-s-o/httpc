@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Copyright (C) 2021 Daniel Mueller <deso@posteo.net>
+# Copyright (C) 2021-2025 Daniel Mueller <deso@posteo.net>
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 set -e -u -o pipefail
 
-# Start the test-server example in the back ground, providing its output
+# Start the test-server example in the background, providing its output
 # as file descriptor 3.
 exec 3< <(cargo run --example test-server --quiet -- --nocapture)
 # Wait for and read the first line of output, which is the address we

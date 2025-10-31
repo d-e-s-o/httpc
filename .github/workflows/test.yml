@@ -49,7 +49,6 @@ jobs:
       - name: Test
         run: |
           cargo build --lib --tests --target=wasm32-unknown-unknown
-          make test-runner
           make test-wasm
   clippy:
     name: Lint with clippy

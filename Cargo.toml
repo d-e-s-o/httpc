@@ -9,13 +9,17 @@ description = """
 An HTTP client working both natively and in WASM environments.
 """
 
-# Not an actual example. Used for testing. Needs to be an example
-# because it needs access to dev-dependencies, which [[bin]] does not
-# provide. [[test]] in turn contains the test harness which prints
-# unrelated stuff and is unwanted for that reason.
+# Not a actual examples. Used for testing. Need to be examples because
+# they need access to dev-dependencies, which [[bin]] does not provide.
+# [[test]] in turn contains the test harness which prints unrelated
+# stuff and is unwanted for that reason.
 [[example]]
 name = "test-server"
 path = "tests/test/server.rs"
+
+[[example]]
+name = "test-runner"
+path = "tests/test/runner.rs"
 
 [dependencies]
 async-trait = "0.1.50"
@@ -45,8 +49,10 @@ features = [
 ]
 
 [target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
+anyhow = "1.0"
 tokio = {version = "1.0", default-features = false, features = ["macros", "rt-multi-thread"]}
 warp = {version = "0.3", default-features = false}
+wasm-bindgen-cli = "0.2"
 
 [target.'cfg(target_arch = "wasm32")'.dev-dependencies]
 wasm-bindgen-test = "0.3"

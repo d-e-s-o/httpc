@@ -1,4 +1,4 @@
-// Copyright (C) 2021 Daniel Mueller <deso@posteo.net>
+// Copyright (C) 2021-2025 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -55,7 +55,7 @@ fn main() {
   })
 }
 
-// Clever wasm-bindgen-test tries to compile this example when it
-// shouldn't and bails out if there is no main function. So stub it out.
+// Cargo may try to compile this example and bails out if there is no
+// main function. So stub it out.
 #[cfg(target_arch = "wasm32")]
 fn main() {}

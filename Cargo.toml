@@ -1,9 +1,19 @@
-[package]
-name = "httpc"
-version = "0.1.2"
+[workspace]
+members = [
+  ".",
+]
+
+[workspace.package]
 authors = ["Daniel Mueller <deso@posteo.net>"]
 edition = "2021"
 license = "Apache-2.0 OR MIT"
+
+[package]
+name = "httpc"
+version = "0.1.2"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
 homepage = "https://github.com/d-e-s-o/httpc"
 description = """
 An HTTP client working both natively and in WASM environments.

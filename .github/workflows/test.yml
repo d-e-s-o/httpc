@@ -23,9 +23,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: dtolnay/rust-toolchain@stable
       - name: Test
-        run: |
-          cargo build --lib --tests
-          make test-native
+        run: cargo test-native
   test-wasm:
     name: Test WASM
     runs-on: ubuntu-latest
@@ -47,9 +45,7 @@ jobs:
           # Firefox.
           sudo apt-get install --no-upgrade --assume-yes nodejs firefox
       - name: Test
-        run: |
-          cargo build --lib --tests --target=wasm32-unknown-unknown
-          make test-wasm
+        run: cargo test-wasm
   clippy:
     name: Lint with clippy
     runs-on: ubuntu-latest

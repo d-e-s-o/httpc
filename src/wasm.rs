@@ -1,4 +1,4 @@
-// Copyright (C) 2021 Daniel Mueller <deso@posteo.net>
+// Copyright (C) 2021-2025 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 use async_trait::async_trait;
@@ -116,10 +116,13 @@ async fn request(
 
 
 /// An HTTP client for usage in WASM environments.
+// TODO: Remove this type.
 #[derive(Debug)]
 #[deprecated(note = "use Issue trait instead")]
+#[allow(deprecated)]
 pub struct Client(Window);
 
+#[allow(deprecated)]
 impl Client {
   /// Create a new WASM HTTP client.
   pub fn new() -> Self {
@@ -133,12 +136,14 @@ impl Client {
   }
 }
 
+#[allow(deprecated)]
 impl Default for Client {
   fn default() -> Self {
     Self::new()
   }
 }
 
+#[allow(deprecated)]
 impl From<Window> for Client {
   /// Create a `Client` from a `Window`.
   fn from(window: Window) -> Self {
@@ -146,6 +151,7 @@ impl From<Window> for Client {
   }
 }
 
+#[allow(deprecated)]
 impl Into<Window> for Client {
   /// Extract the `Window` from a `Client`.
   fn into(self) -> Window {

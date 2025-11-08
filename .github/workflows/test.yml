@@ -55,6 +55,4 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy
-        # TODO: Once we removed deprecated features we should remove the -A
-        #       part.
-      - run: cargo clippy --no-deps --all-targets --workspace -- -A unknown_lints -A deprecated -D warnings
+      - run: cargo clippy --no-deps --all-targets --workspace -- -A unknown_lints -D warnings

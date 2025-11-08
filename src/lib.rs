@@ -1,4 +1,4 @@
-// Copyright (C) 2021-2022 Daniel Mueller <deso@posteo.net>
+// Copyright (C) 2021-2025 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 #[cfg(not(target_arch = "wasm32"))]
@@ -18,6 +18,8 @@ mod wasm;
 pub use error::Error;
 pub use issue::Issue;
 #[cfg(not(target_arch = "wasm32"))]
+#[allow(deprecated)]
 pub use native::Client;
 #[cfg(target_arch = "wasm32")]
+#[allow(deprecated)]
 pub use wasm::Client;

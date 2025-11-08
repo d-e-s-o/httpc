@@ -1,0 +1,10 @@
+[package]
+name = "make"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
+
+[[bin]]
+name = "make"
+path = "make.rs"

@@ -1,2 +1,8 @@
 [target.wasm32-unknown-unknown]
 runner = "cargo run --quiet --example test-runner -- "
+
+[alias]
+test-native = "run -p make -- exec bash ./test-target.sh"
+# Run the test suite. Note that in order to debug issues, you can run
+# with NO_HEADLESS=1.
+test-wasm = "run -p make -- exec bash ./test-target.sh --target=wasm32-unknown-unknown"

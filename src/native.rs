@@ -1,4 +1,4 @@
-// Copyright (C) 2021-2022 Daniel Mueller <deso@posteo.net>
+// Copyright (C) 2021-2025 Daniel Mueller <deso@posteo.net>
 // SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
 use async_trait::async_trait;
@@ -43,10 +43,12 @@ where
 
 
 /// An HTTP client for native usage.
+// TODO: Remove this type.
 #[derive(Debug)]
 #[deprecated(note = "use Issue trait instead")]
 pub struct Client(HyperClient<HttpsConnector<HttpConnector>, Body>);
 
+#[allow(deprecated)]
 impl Client {
   /// Create a new "native" HTTP client.
   pub fn new() -> Self {
@@ -61,12 +63,14 @@ impl Client {
   }
 }
 
+#[allow(deprecated)]
 impl Default for Client {
   fn default() -> Self {
     Self::new()
   }
 }
 
+#[allow(deprecated)]
 impl From<HyperClient<HttpsConnector<HttpConnector>, Body>> for Client {
   /// Create a `Client` from a `hyper::Client`.
   fn from(client: HyperClient<HttpsConnector<HttpConnector>, Body>) -> Self {
@@ -74,6 +78,7 @@ impl From<HyperClient<HttpsConnector<HttpConnector>, Body>> for Client {
   }
 }
 
+#[allow(deprecated)]
 impl From<Client> for HyperClient<HttpsConnector<HttpConnector>, Body> {
   /// Extract the `hyper::Client` from a `Client`.
   fn from(client: Client) -> Self {
@@ -101,6 +106,7 @@ mod tests {
 
   /// Ensure that futures as returned by `Client::issue` are `Send`.
   #[test]
+  #[allow(deprecated)]
   fn issue_future_is_send() {
     fn test<T>(_unused: T)
     where

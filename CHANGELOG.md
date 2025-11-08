@@ -1,5 +1,5 @@
-Unreleased
-----------
+0.1.3
+-----
 - Switched to using Rust 2021 Edition
 - Switched to using GitHub Actions as CI provider
 - Unpinned `wasm-bindgen` dependency

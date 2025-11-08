@@ -42,21 +42,17 @@ fn into_web_request(request: Request<Option<String>>) -> Result<WebRequest, Erro
         Ok(headers)
       })?;
 
-  let value;
-  let body = if let Some(body) = body {
-    value = JsValue::from_str(&body);
-    Some(&value)
-  } else {
-    None
-  };
+  let opts = RequestInit::new();
+  opts.set_mode(RequestMode::Cors);
+  opts.set_method(parts.method.as_str());
+  opts.set_headers(&headers);
+
+  if let Some(body) = body {
+    let value = JsValue::from_str(&body);
+    opts.set_body(&value);
+  }
+
   let uri = parts.uri;
-
-  let mut opts = RequestInit::new();
-  opts.mode(RequestMode::Cors);
-  opts.method(parts.method.as_str());
-  opts.headers(&headers);
-  opts.body(body);
-
   let request = WebRequest::new_with_str_and_init(&uri.to_string(), &opts).map_err(|err| {
     Error::web(
       format!("failed to create GET request for {}", uri.to_string()),
